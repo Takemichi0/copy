@@ -1,0 +1,36 @@
+import os
+
+from dotenv import load_dotenv
+
+dotenv_path = '.env'
+load_dotenv(dotenv_path)
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY is not set in the environment.")
+
+LISTEN_PORT = int(os.getenv("PORT", "8000"))
+ENVIRONMENT = os.getenv("ENVIRONMENT", "production")
+
+# Qdrant
+QDRANT_URL = os.getenv("QDRANT_URL")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+
+# Firebase
+FIREBASE_PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID")
+FIREBASE_PRIVATE_KEY_ID = os.getenv("FIREBASE_PRIVATE_KEY_ID")
+FIREBASE_PRIVATE_KEY = os.getenv("FIREBASE_PRIVATE_KEY")
+FIREBASE_CLIENT_EMAIL = os.getenv("FIREBASE_CLIENT_EMAIL")
+FIREBASE_CLIENT_ID = os.getenv("FIREBASE_CLIENT_ID")
+FIREBASE_AUTH_URI = os.getenv("FIREBASE_AUTH_URI")
+FIREBASE_TOKEN_URI = os.getenv("FIREBASE_TOKEN_URI")
+FIREBASE_CLIENT_URL = os.getenv("FIREBASE_CLIENT_URL")
+FIREBASE_AUTH_PROVIDER_URL = os.getenv("FIREBASE_AUTH_PROVIDER_URL")
+FIREBASE_DATABASE_URL = os.getenv("FIREBASE_DATABASE_URL")
+
+# Slack
+SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID")
+SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET")
+SLACK_BOT_ID = os.getenv("SLACK_BOT_ID")
+SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET")
+FIREBASE_STORAGE_BUCKET = os.getenv("FIREBASE_STORAGE_BUCKET")

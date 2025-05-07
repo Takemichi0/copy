@@ -1,0 +1,50 @@
+name: Deploy FTP CI
+
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY: ${{ secrets.API_KEY}}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID}}
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Export Next.js App
+        run:  cd frontend
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+
+      - name: Export Next.js App
+        run: |
+          cd frontend && yarn install && yarn build
+
+
+      - name: Deploy FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.1
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ secrets.FTP_PROTOCOL }}
+          port: ${{ secrets.FTP_PORT}}
+          server-dir: ${{ secrets.FTP_REMOTE_ROOT }}
+          local-dir: frontend/.next/
+          dangerous-clean-slate: true
+
+
