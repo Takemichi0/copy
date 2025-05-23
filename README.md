@@ -1,50 +1,58 @@
+Here is the English translation of the main README for the Takemichi0/copy repository:
+
+---
+
 ## What's this?
 
-提供されたPDFの内容に関する質問に自動的に答えることができるツールを作成する  
-利用シナリオ: 学術論文の長い文書に対して、特定の情報やデータを素早く取得したい場合。PDFアップロード可のため取扱説明書や利用規約にも応用可能。  
+This tool automatically answers questions about the content of a provided PDF.  
+Use case: When you want to quickly find specific information or data in long academic papers. Since it supports PDF uploads, it can also be used with instruction manuals or terms of service, etc.
 
-## 関連リンク
+## Related Links
+
 - [Notion](https://www.notion.so/Arxiv-Interpreter-79c7f39d96614a569ab9588363840225)
 - [Asana](https://app.asana.com/0/1205566635091585/1205566639320124)
 
-## インフラ / 技術スタック  
-GoogleのサービスはtransXのGoogleアカウントが権限を有している。  
+## Infrastructure / Tech Stack
 
-- フロントエンド(/frontend)  
-  Next.js, deploy to Vercel.  (Firebase Auth)
-  Todo; vercelは商用利用不可のためconohaなどに乗り換えを検討.  
+Google services are managed with the transX Google account.
 
-- サーバサイド  
-  Python(fastAPI), deploy to GCP(Cloud Run) (DBはQdrant / Firebaseを使用)
-  FirebaseのAuthでアクセス制限.  
+- Frontend (/frontend)  
+  Next.js, deployed to Vercel. (Firebase Auth)  
+  Todo: Considering migration to Conoha or another provider since Vercel cannot be used for commercial purposes.
 
-  [アーキテクチャ図](https://www.notion.so/Arxiv-Interpreter-79c7f39d96614a569ab9588363840225)
-  
+- Backend  
+  Python (FastAPI), deployed to GCP (Cloud Run). (Uses Qdrant / Firebase as database)  
+  Access restriction via Firebase Auth.
 
-## 環境構築
-事前にDockerの環境を用意する。 (アプリを入れると良いかと思います)
+  [Architecture Diagram](https://www.notion.so/Arxiv-Interpreter-79c7f39d96614a569ab9588363840225)
 
-Dockerコンテナをビルド / 起動 (初回のみ)  
+## Environment Setup
+
+Prepare a Docker environment in advance. (Installing the Docker app is recommended)
+
+Build and start the Docker container (only needed the first time):  
 `docker-compose up --build`
 
-Dockerコンテナを起動  
+Start the Docker container:  
 `docker-compose up`
 
-サーバーサイドは `http://localhost:8000` で起動  
-フロントエンドは `http://localhost:3000` で起動 
+The backend runs at `http://localhost:8000`  
+The frontend runs at `http://localhost:3000`
 
-Swagger  
+Swagger:  
 `http://localhost:8000/docs#/`
 
-## Local環境での開発の仕方
-1. [slack bot](https://api.slack.com/apps)を新規作成する / その後作成したアプリのポータル画面へ行き.. `https://api.slack.com/apps/{app_id}`
-2. Install appでtransxのワークスーペースに追加する  
-3. Basic informaiton下部にあるapp idなどを.envに上書き(4つ程度ある)
-4. event subscrioptionsでlocalで立ち上げたngrokのURLを追加する `http:// ....ngrok-free.tech/slack/events` など(最後のeventsは環境に合わせて、jap or events)  
-5. event subscrioptions下部のSubscribe to bot eventsにapp_mentionとmessage.channelsを追加。
-6. Oauth & Permissions でBot Token Scopesにapp_mentions:read / channels:history / chat:write / groups:history / im:history / mpim:history を追加
-7. 最終的に以下のようなapp manifestが完成すれば良い（不一致部分はApp manifestを修正して欲しい) (arxivistaの例)
-```
+## How to Develop Locally
+
+1. Create a new [Slack bot](https://api.slack.com/apps), then go to the portal page for the created app: `https://api.slack.com/apps/{app_id}`
+2. Install the app to the transX workspace.
+3. Overwrite the four or so app ids found at the bottom of Basic Information into the .env file.
+4. In event subscriptions, add your local ngrok URL (for example, `http://....ngrok-free.tech/slack/events`). The last segment ("events") may differ depending on your environment.
+5. Under event subscriptions, add `app_mention` and `message.channels` to "Subscribe to bot events".
+6. Under OAuth & Permissions, add these Bot Token Scopes: `app_mentions:read`, `channels:history`, `chat:write`, `groups:history`, `im:history`, `mpim:history`.
+7. The app manifest should look like the example below. If there are any discrepancies, correct the App manifest (example is for arxivista):
+
+```json
 {
     "display_information": {
         "name": "Arxivista"
@@ -87,21 +95,25 @@ Swagger
         "token_rotation_enabled": false
     }
 }
-```   
+```
 
+## About API keys (environment variables)
 
-## API key(環境変数)について
-バックエンドのrootディレクトリに `.env` ファイルを作成し、以下のように記述する。(.env.sampleを参考に)
+Create a `.env` file in the backend root directory and write the following (refer to `.env.sample`):
+
 ```
 OpenAI_API_KEY=""
 ```
-OpenAIのAPIキーはスプレッドシートに記載されている。  
-firebase_secret.jsonを.envと同じ階層に作成(asana参照)  
-フロントエンドのrootディレクトリ `.env.local` ファイルも作成。  
 
-### PUTリクエストの送り方
-settings.pyファイルにてAPIキーを取得しているため、以下の方法でリクエスト可能  (Swagger参照)  
-ex) 
+The OpenAI API key is listed in a spreadsheet.  
+Create `firebase_secret.json` in the same directory as `.env` (see Asana for details).  
+Also create a `.env.local` file in the frontend root directory.
+
+### How to Send PUT Requests
+
+The API key is obtained in the settings.py file, so you can send requests as follows (see Swagger for details):
+
+Example:
 ```
 curl -X 'PUT' \
   'http://localhost:8000/process_pdf/' \
@@ -123,13 +135,20 @@ curl -X 'PUT' \
 ```
 
 ## pytest
-testsディレクトリにテストコードを書く
+
+Write test code in the `tests` directory.  
+Run tests with:  
 `docker-compose exec backend pytest`
 
-## 開発ルール
-mainブランチが最新。
-asanaに割り当てられたタスクをブランチを切って開発  
-ブランチ名はなんでも構いませんが、 `feature/タスク概要` が良いかも  
-PRは1人以上のレビューを受けてApproveされてからマージ
-プロジェクト内のコードは.editorconfig に従うこと
-marge方法は`Squash and merge`を使用すること
+## Development Rules
+
+- The main branch is up to date.
+- Develop by creating branches for tasks assigned in Asana.
+- Branch names can be anything, but `feature/short-description-of-task` is recommended.
+- Pull requests must be reviewed and approved by at least one person before merging.
+- Follow `.editorconfig` for code formatting.
+- Use "Squash and merge" when merging.
+
+---
+
+Let me know if you need a translation for the frontend/README.md as well!
