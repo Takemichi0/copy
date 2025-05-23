@@ -1,7 +1,3 @@
-Here is the English translation of the main README for the Takemichi0/copy repository:
-
----
-
 ## What's this?
 
 This tool automatically answers questions about the content of a provided PDF.  
